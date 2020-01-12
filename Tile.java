@@ -6,6 +6,8 @@
 
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Insets;
 
 public class Tile extends JButton
 {
@@ -24,9 +26,10 @@ public class Tile extends JButton
         jCoord = j;
         mineInformation = 0;
         super.setText(toString());
-        super.setSize(TILE_SIZE, TILE_SIZE);
         super.setBackground(new Color(123, 123, 123));
         visited = false;
+        super.setMinimumSize(new Dimension(TILE_SIZE, TILE_SIZE));
+        super.setMargin(new Insets(0, 0, 0, 0));
     }
 
     // sets the tile information
