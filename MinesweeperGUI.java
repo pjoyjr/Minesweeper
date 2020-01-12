@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class MinesweeperGUI
 {
-    private static JFrame frame;
+    private static JFrame frame, frameWin;
     private static JMenuBar menuBar;
     private static JMenu menu, menuDifficulty;
     private static JMenuItem menuItemE, menuItemM, menuItemH, menuItemC;
@@ -15,62 +15,10 @@ public class MinesweeperGUI
     private static int height, width, numMines, diff = 0;
     private static int[] newDiff;
 
-    private static ActionListener menuListen = new ActionListener(){
-        public void actionPerformed(ActionEvent event){
-            if(event.getSource()==menuItemE)
-            {
-                diff = 0;
-            }
-            if(event.getSource()==menuItemM)
-            {
-                diff = 1;
-            }
-            if(event.getSource()==menuItemH)
-            {
-                diff = 2;
-            }
-            if(event.getSource()==menuItemC)
-            {
-                diff = 3;
-                newDiff = new int[3];
-                newDiff = customGame(); 
-
-            }
-            locked = false;
-            updateGUI();
-        }
-     };
-
-     private static MouseListener boardListen = new MouseAdapter(){
-        public void mouseClicked(MouseEvent e){
-            if(!locked)
-            {
-                Tile clickedTile = (Tile) e.getSource();
-                final int h = clickedTile.iCoord;
-                final int w = clickedTile.jCoord;
-                //left click
-                if(e.getButton() == 1) {
-                    //button.setText("F");
-                    if(clickedTile.getFlagged() == 0)
-                    {
-                        game.visitTile(h, w);
-                    }
-                }
-                //right click
-                if(e.getButton() == 2 || e.getButton() == 3) {
-                    //button.setText("F");
-                    game.toggleFlag(h, w);
-                }
-                //if lose lock GUI
-                if(!game.getTileActivity())
-                {
-                    locked = true;
-                }
-                label.setText(game.updateLabel());
-                game.victory();
-            }
-        }    
-    };
+    public static void main(final String[] args) 
+    {
+        buildGUI();
+    }
 
     private static int[] customGame()
     {
@@ -91,7 +39,8 @@ public class MinesweeperGUI
         myPanel.add(mField);
 
         int result = JOptionPane.showConfirmDialog(null, myPanel, "Custom game", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
+        if (result == JOptionPane.OK_OPTION) 
+        {
             customValues[0] = Integer.parseInt(hField.getText());
             customValues[1] = Integer.parseInt(wField.getText());
             customValues[2] = Integer.parseInt(mField.getText());
@@ -101,9 +50,6 @@ public class MinesweeperGUI
                 customValues[1] = 20;
                 customValues[2] = 20;
             }
-            System.out.println("Height value: " + customValues[0]);
-            System.out.println("Width value: " + customValues[1]);
-            System.out.println("Mines value: " + customValues[2]);
         }
         return customValues;
     }
@@ -141,11 +87,13 @@ public class MinesweeperGUI
 
     private static void updateGUI()
     { 
-        if(panel != null){
+        if(panel != null)
+        {
             frame.remove(panel);
             frame.remove(label);
         }
-        try {
+        try 
+        {
             switch(diff)
             {
                 case 0:
@@ -164,7 +112,8 @@ public class MinesweeperGUI
                     game = new Minesweeper(25, 25, 12);
                     break;
             }
-        } catch (final TooManyMinesException ex) {
+        } catch (final TooManyMinesException ex) 
+        {
             System.out.print("Error");
         }
 
@@ -174,8 +123,10 @@ public class MinesweeperGUI
 
         panel = new JPanel();
         panel.setLayout(new GridLayout(height, width));
-        for (int h = 0; h < height; h++) {
-            for (int w = 0; w < width; w++) {
+        for (int h = 0; h < height; h++) 
+        {
+            for (int w = 0; w < width; w++) 
+            {
                 panel.add(game.getTile(h, w));
                 game.getTile(h,w).addMouseListener(boardListen);
             }
@@ -190,7 +141,64 @@ public class MinesweeperGUI
 
     }
 
-    public static void main(final String[] args) {
-        buildGUI();
-    }  
+
+    private static ActionListener menuListen = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            if(event.getSource()==menuItemE)
+            {
+                diff = 0;
+            }
+            if(event.getSource()==menuItemM)
+            {
+                diff = 1;
+            }
+            if(event.getSource()==menuItemH)
+            {
+                diff = 2;
+            }
+            if(event.getSource()==menuItemC)
+            {
+                diff = 3;
+                newDiff = new int[3];
+                newDiff = customGame(); 
+
+            }
+            locked = false;
+            updateGUI();
+        }
+     };
+
+     private static MouseListener boardListen = new MouseAdapter()
+     {
+        public void mouseClicked(MouseEvent e)
+        {
+            if(!locked)
+            {
+                Tile clickedTile = (Tile) e.getSource();
+                final int h = clickedTile.iCoord;
+                final int w = clickedTile.jCoord;
+                //left click
+                if(e.getButton() == 1)
+                {
+                    //button.setText("F");
+                    if(clickedTile.getFlagged() == 0)
+                        game.visitTile(h, w);
+                }
+                //right click
+                if(e.getButton() == 2 || e.getButton() == 3)
+                    game.toggleFlag(h, w);
+                //if lose lock GUI
+                if(!game.getTileActivity())
+                    locked = true;
+                label.setText(game.updateLabel());
+                if(game.victory())
+                {
+                    frameWin =new JFrame();  
+                    JOptionPane.showMessageDialog(frameWin,"You Win!"); 
+                }
+            }
+        }    
+    };
 }
