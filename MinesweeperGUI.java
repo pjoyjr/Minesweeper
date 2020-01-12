@@ -13,6 +13,7 @@ public class MinesweeperGUI
     private static JLabel label;
     private static boolean locked = false;
     private static int height, width, numMines, diff = 0;
+    private static int[] newDiff;
 
     private static ActionListener menuListen = new ActionListener(){
         public void actionPerformed(ActionEvent event){
@@ -31,6 +32,9 @@ public class MinesweeperGUI
             if(event.getSource()==menuItemC)
             {
                 diff = 3;
+                newDiff = new int[3];
+                newDiff = customGame(); 
+
             }
             locked = false;
             updateGUI();
@@ -63,9 +67,46 @@ public class MinesweeperGUI
                     locked = true;
                 }
                 label.setText(game.updateLabel());
+                game.victory();
             }
         }    
     };
+
+    private static int[] customGame()
+    {
+        int[] customValues = new int[3];
+        JTextField hField = new JTextField(2);
+        JTextField wField = new JTextField(2);
+        JTextField mField = new JTextField(2);
+
+        JPanel myPanel = new JPanel();
+
+        myPanel.add(new JLabel("Height: (max 20)"));
+        myPanel.add(hField);
+        myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+        myPanel.add(new JLabel("Width: (max 20)"));
+        myPanel.add(wField);
+        myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+        myPanel.add(new JLabel("Mines: (max h*w)"));
+        myPanel.add(mField);
+
+        int result = JOptionPane.showConfirmDialog(null, myPanel, "Custom game", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            customValues[0] = Integer.parseInt(hField.getText());
+            customValues[1] = Integer.parseInt(wField.getText());
+            customValues[2] = Integer.parseInt(mField.getText());
+            if(customValues[0] > 20 || customValues[1] > 20 || customValues[2] >= (customValues[0]*customValues[1]))
+            {
+                customValues[0] = 20;
+                customValues[1] = 20;
+                customValues[2] = 20;
+            }
+            System.out.println("Height value: " + customValues[0]);
+            System.out.println("Width value: " + customValues[1]);
+            System.out.println("Mines value: " + customValues[2]);
+        }
+        return customValues;
+    }
     
     private static void buildGUI(){
         frame = new JFrame("Minesweeper");
@@ -117,7 +158,7 @@ public class MinesweeperGUI
                     game = new Minesweeper(Minesweeper.HARD_WIDTH, Minesweeper.HARD_HEIGHT, Minesweeper.HARD_MINES);
                     break;
                 case 3:
-                    game = new Minesweeper(15,15,12);
+                    game = new Minesweeper(newDiff[0],newDiff[1],newDiff[2]);
                     break;
                 default:
                     game = new Minesweeper(25, 25, 12);
