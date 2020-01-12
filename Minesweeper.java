@@ -40,18 +40,12 @@ public class Minesweeper
     {
         if(board.getTile(i, j).getVisited() == false && this.tileActivity == true)
         {
-            if(board.getTile(i, j).getFlagged() == true)
-            {
-                board.getTile(i, j).setFlagged(false);
-                board.getTile(i, j).setText(" ");
-                flagsMarked--;
-            }
-            else
-            {
-                board.getTile(i, j).setFlagged(true);
-                board.getTile(i, j).setText(board.getTile(i, j).toString());
+            board.getTile(i, j).setFlagged();
+            board.getTile(i, j).setText(board.getTile(i, j).toString());
+            if(board.getTile(i, j).getFlagged() == 1)
                 flagsMarked++;
-            }
+            if(board.getTile(i, j).getFlagged() == 0)
+                flagsMarked--;
         }
     }
 
@@ -60,24 +54,27 @@ public class Minesweeper
     {
         if(board.getTile(i, j).getVisited() == false && this.tileActivity == true)
         {
-            //if mine, then game over
+            //mine, then game over
             if(board.getTile(i, j).getTileInformation() == -1)
             {
                 showMines();
-                board.getTile(i, j).setVisited(true);
+                board.setVisited(i, j, true);
                 this.tileActivity = false;
-                frame =new JFrame();  
+                frame = new JFrame();  
                 JOptionPane.showMessageDialog(frame,"You clicked on a Mine! You Lose!");  
             }
+            //no surrounding mines
             else if(board.getTile(i, j).getTileInformation() == 0)
             {
+                board.setVisited(i, j, true);
                 board.getTile(i, j).setText(board.getTile(i, j).toString());
                 expandVisit(i, j);
             }
+            //some surrounding mines
             else
             {
-                board.getTile(i, j).setText(board.getTile(i, j).toString());
                 board.getTile(i, j).setVisited(true);
+                board.getTile(i, j).setText(board.getTile(i, j).toString());
             }
         }
     }
@@ -102,8 +99,8 @@ public class Minesweeper
                 if (!board.getVisited(u, v))
                 {
                     final int tileInfo = board.getMineInformation(u, v);
-                    final boolean flagged = board.getFlagged(u, v);
-                    if (!flagged)
+                    final int flagged = board.getFlagged(u, v);
+                    if (flagged == 0)
                     {
                         // expand if tileInfo is 0
                         if (tileInfo == 0)
@@ -113,8 +110,8 @@ public class Minesweeper
                         }
                         // if a number just set it as visited
                         else if (tileInfo > 0)
-                            board.getTile(u,v).setText(board.getTile(u, v).toString());
                             board.setVisited(u, v, true);
+                            board.getTile(u,v).setText(board.getTile(u, v).toString());
                         // else tileInfo -> mine or flag
                     }
                 }
@@ -162,8 +159,6 @@ public class Minesweeper
     // otherwise
     public boolean victory()
     {
-        // TODO:  check for the victory condition and return true if the game
-        // is won, false otherwise.
         for(int h = 0; h < getHeight(); h++)
         {
             for(int w = 0; w < getWidth(); w++)
@@ -177,6 +172,8 @@ public class Minesweeper
                 }
             }
         }
+        frame =new JFrame();  
+        JOptionPane.showMessageDialog(frame,"You Win!");  
         return true;
     }
 
@@ -200,9 +197,9 @@ public class Minesweeper
                 {
                     board.getTile(h, w).setText("M");
                 }
-                if(board.getTile(h, w).getFlagged() == true && board.getTile(h, w).getTileInformation() != Tile.MINE)
+                if(board.getTile(h, w).getFlagged() != 0 && board.getTile(h, w).getTileInformation() != Tile.MINE)
                 {
-                        board.getTile(h, w).setText("X");
+                    board.getTile(h, w).setText("X");
                 }
             }
         }

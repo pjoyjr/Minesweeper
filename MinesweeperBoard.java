@@ -100,9 +100,9 @@ public class MinesweeperBoard
         boardTiles[i][j].setVisited(visited);
     }
 
-    public void setFlagged(final int i, final int j, final boolean flagged)
+    public void setFlagged(final int i, final int j)
     {
-        boardTiles[i][j].setFlagged(flagged);
+        boardTiles[i][j].setFlagged();
     }
 
     public int getTileInformation(final int i, final int j)
@@ -115,7 +115,7 @@ public class MinesweeperBoard
         return boardTiles[i][j].getVisited();
     }
 
-    public boolean getFlagged(final int i, final int j)
+    public int getFlagged(final int i, final int j)
     {
         return boardTiles[i][j].getFlagged();
     }

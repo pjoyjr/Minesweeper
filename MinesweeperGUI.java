@@ -70,7 +70,7 @@ public class MinesweeperGUI
                                 //left click
                                 if(e.getButton() == 1) {
                                     //button.setText("F");
-                                    if(game.getTile(clickedButton.iCoord, clickedButton.jCoord).toString() != "F")
+                                    if(game.getTile(clickedButton.iCoord, clickedButton.jCoord).getFlagged() == 0)
                                     {
                                         game.visitTile(clickedButton.iCoord, clickedButton.jCoord);
                                     }
@@ -86,6 +86,9 @@ public class MinesweeperGUI
                                     locked = true;
                                 }
                                 label.setText(game.updateLabel());
+                                if(game.getTileActivity() == false || game.victory())
+                                    
+                                    createGUI(10, 10, 12);
                             }
                         }
                           
@@ -104,8 +107,6 @@ public class MinesweeperGUI
         frame.setVisible(true);
     }
     public static void main(final String[] args) {
-        // TODO: this is the main method which should be used for the final
-        // submission
-        createGUI(10, 10, 5);
+        createGUI(10, 10, 12);
     }
 }

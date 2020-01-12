@@ -13,7 +13,7 @@ public class Tile extends JButton
     public static final int MINE = -1;          // mine identifier
     public int iCoord, jCoord;                 // position of the tile
     private int mineInformation;                // information about the tile
-    private boolean flagged;                    // user placed a flag?
+    private int flagged;                    // user placed a flag?
     private boolean visited;                    // tile selected by user
     private static final long serialVersionUID = 1L;
 
@@ -45,9 +45,10 @@ public class Tile extends JButton
     }
 
     // sets a tile to be flagged based on the boolean state
-    public void setFlagged(final boolean flagged)
+    public void setFlagged()
     {
-        this.flagged = flagged;
+        //0 denotes no flag, 1 denotes mine, 2 denotes maybe mine
+        this.flagged = (this.flagged+1)%3;
     }
 
     public int getTileInformation()
@@ -60,14 +61,14 @@ public class Tile extends JButton
         return visited;
     }
 
-    public boolean getFlagged()
+    public int getFlagged()
     {
         return flagged;
     }
 
     public String toString()
     {
-        if (!flagged)
+        if(visited)
         {
             switch (mineInformation)
             {
@@ -79,6 +80,10 @@ public class Tile extends JButton
                     return "" + String.valueOf(mineInformation);
             }
         }
-        return "F";
+        if(flagged == 1)
+            return "F";
+        if(flagged == 2)
+            return "?";
+        return " ";
     }
 }
