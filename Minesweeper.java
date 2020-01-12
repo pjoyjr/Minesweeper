@@ -1,9 +1,11 @@
+
 /**
  * Minesweeper.java
  * 
  * Includes gameplay logic to play a game of minesweeper.
  */
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Minesweeper
@@ -22,7 +24,9 @@ public class Minesweeper
     private int flagsMarked;            // flags marked by the player
     private int numMines;               // mines in the game
     private boolean tileActivity;       // tile activity enabled or disabled
-
+    private String minesLabel;
+    private JFrame frame;
+    
     public Minesweeper(final int width, final int height, final int numMines)
         throws TooManyMinesException
     {
@@ -39,12 +43,14 @@ public class Minesweeper
             if(board.getTile(i, j).getFlagged() == true)
             {
                 board.getTile(i, j).setFlagged(false);
-                board.getTile(i, j).setText(board.getTile(i, j).toString());
+                board.getTile(i, j).setText(" ");
+                flagsMarked--;
             }
             else
             {
                 board.getTile(i, j).setFlagged(true);
                 board.getTile(i, j).setText(board.getTile(i, j).toString());
+                flagsMarked++;
             }
         }
     }
@@ -52,17 +58,16 @@ public class Minesweeper
     // logic applied to the game board when a tile is visited
     public void visitTile(final int i, final int j)
     {
-        // TODO: If the tile has already been visited, then nothing should be done.
-        // If the tile needs to be visited, then it should be visited.  If the
-        // visited tile has no adjacent tiles, then expandVisit should be called
-        // on this tile.
         if(board.getTile(i, j).getVisited() == false && this.tileActivity == true)
         {
             //if mine, then game over
             if(board.getTile(i, j).getTileInformation() == -1)
             {
-                System.out.println("TODO: You lose!");
+                showMines();
+                board.getTile(i, j).setVisited(true);
                 this.tileActivity = false;
+                frame =new JFrame();  
+                JOptionPane.showMessageDialog(frame,"You clicked on a Mine! You Lose!");  
             }
             else if(board.getTile(i, j).getTileInformation() == 0)
             {
@@ -141,10 +146,16 @@ public class Minesweeper
     {
         return numMines;
     }
-
+    
     public Tile getTile(final int i, final int j)
     {
         return board.getTile(i, j);
+    }
+
+    public String updateLabel()
+    {   
+        minesLabel = "MINES FOUND: " + String.valueOf(getFlagsMarked()) +  "/" + String.valueOf(getNumMines());
+        return minesLabel;
     }
 
     // checks and returns true if the victory condition is satisfied, false
@@ -153,11 +164,47 @@ public class Minesweeper
     {
         // TODO:  check for the victory condition and return true if the game
         // is won, false otherwise.
-        return false;
+        for(int h = 0; h < getHeight(); h++)
+        {
+            for(int w = 0; w < getWidth(); w++)
+            {
+                if(board.getTile(h, w).getTileInformation() != Tile.MINE)
+                {
+                    if(board.getTile(h, w).getVisited() != true)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public String toString()
     {
         return "" + board;
+    }
+
+    public boolean getTileActivity()
+    {
+        return this.tileActivity;
+    }
+
+    public void showMines()
+    {
+        for(int h = 0; h < getHeight(); h++)
+        {
+            for(int w = 0; w < getWidth(); w++)
+            {
+                if(board.getTile(h, w).getTileInformation() == Tile.MINE)
+                {
+                    board.getTile(h, w).setText("M");
+                }
+                if(board.getTile(h, w).getFlagged() == true && board.getTile(h, w).getTileInformation() != Tile.MINE)
+                {
+                        board.getTile(h, w).setText("X");
+                }
+            }
+        }
     }
 }

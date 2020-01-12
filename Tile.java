@@ -40,6 +40,8 @@ public class Tile extends JButton
     {
         this.visited = visited;
         super.setBackground(new Color(255, 255, 255));
+        if(getTileInformation() == MINE)
+            super.setBackground(new Color(255, 0, 0));
     }
 
     // sets a tile to be flagged based on the boolean state
