@@ -39,10 +39,12 @@ public class Minesweeper
             if(board.getTile(i, j).getFlagged() == true)
             {
                 board.getTile(i, j).setFlagged(false);
+                board.getTile(i, j).setText(board.getTile(i, j).toString());
             }
             else
             {
                 board.getTile(i, j).setFlagged(true);
+                board.getTile(i, j).setText(board.getTile(i, j).toString());
             }
         }
     }

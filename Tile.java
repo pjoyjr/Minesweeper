@@ -5,6 +5,7 @@
  */
 
 import javax.swing.*;
+import java.awt.Color;
 
 public class Tile extends JButton
 {
@@ -22,8 +23,9 @@ public class Tile extends JButton
         iCoord = i;
         jCoord = j;
         mineInformation = 0;
-        super.setText("-");
+        super.setText(toString());
         super.setSize(TILE_SIZE, TILE_SIZE);
+        super.setBackground(new Color(123, 123, 123));
         visited = false;
     }
 
@@ -37,6 +39,7 @@ public class Tile extends JButton
     public void setVisited(final boolean visited)
     {
         this.visited = visited;
+        super.setBackground(new Color(255, 255, 255));
     }
 
     // sets a tile to be flagged based on the boolean state

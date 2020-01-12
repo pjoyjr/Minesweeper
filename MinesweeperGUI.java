@@ -38,6 +38,7 @@ public class MinesweeperGUI
             for (int h = 0; h < height; h++) {
                 for (int w = 0; w < width; w++) {
                     panel.add(game.getTile(h, w));
+                    /*
                     game.getTile(h, w).addActionListener(new ActionListener()
                     {
                       public void actionPerformed(ActionEvent e)
@@ -46,6 +47,21 @@ public class MinesweeperGUI
                         Tile clickedButton = (Tile) e.getSource();
                         game.visitTile(clickedButton.iCoord, clickedButton.jCoord);
                       }
+                    });
+                    */
+                    game.getTile(h,w).addMouseListener(new MouseAdapter(){
+                        public void mouseClicked(MouseEvent e){
+                            Tile clickedButton = (Tile) e.getSource();
+                            if(e.getButton() == 1) {
+                                //button.setText("F");
+                                game.visitTile(clickedButton.iCoord, clickedButton.jCoord);
+                            }
+                            if(e.getButton() == 2 || e.getButton() == 3) {
+                                //button.setText("F");
+                                game.toggleFlag(clickedButton.iCoord, clickedButton.jCoord);
+                            }
+                        }
+                          
                     });
                 }
             }
