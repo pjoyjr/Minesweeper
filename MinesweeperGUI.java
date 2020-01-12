@@ -11,8 +11,20 @@ public class MinesweeperGUI
     private static JPanel panel;
     private static Minesweeper game;
     private static JLabel label;
-    private static Integer diff = 0; 
     private static boolean locked;
+
+    private static ActionListener menuListen = new ActionListener(){
+        public void actionPerformed(ActionEvent event){
+            if(event.getSource()==menuItemE)
+                System.out.println("Easy clicked");
+            if(event.getSource()==menuItemM)
+                System.out.println("Medium clicked");
+            if(event.getSource()==menuItemH)
+                System.out.println("Hard clicked");
+            if(event.getSource()==menuItemC)
+                System.out.println("Custom clicked");
+        }
+     };
 
     private static void createGUI(final int width, final int height, final int numMines) {
         frame = new JFrame("Minesweeper");
@@ -23,32 +35,17 @@ public class MinesweeperGUI
         menuBar.add(menu);
         menuDifficulty = new JMenu("New Game");
         menuItemE = new JMenuItem("Easy");
-        menuItemE.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                    diff = 1;
-            }
-        });
+        menuItemE.addActionListener(menuListen);
         menuDifficulty.add(menuItemE);
         menuItemM = new JMenuItem("Medium");
-        menuItemM.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                    diff = 2;
-            }
-        });
+        menuItemM.addActionListener(menuListen);
         menuDifficulty.add(menuItemM);
         menuItemH = new JMenuItem("Hard");
-        menuItemH.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                    diff = 3;
-            }
-        });
+        menuItemH.addActionListener(menuListen);
         menuDifficulty.add(menuItemH);
         menuItemC = new JMenuItem("Custom");
-        menuItemC.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                    diff = 4;
-            }
-        });
+        menuItemC.addActionListener(menuListen);
+
         menuDifficulty.add(menuItemC);
         menu.add(menuDifficulty);
         frame.setJMenuBar(menuBar);
@@ -106,7 +103,10 @@ public class MinesweeperGUI
         frame.setResizable(false);
         frame.setVisible(true);
     }
+
     public static void main(final String[] args) {
         createGUI(10, 10, 12);
     }
+
+    
 }
